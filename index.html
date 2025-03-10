@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Eficiencia del Sueño</title>
+</head>
+<body>
+    <h1>Predicción de Eficiencia del Sueño</h1>
+    <form id="predictionForm">
+        <label for="Age">Edad:</label>
+        <input type="number" id="Age" name="Age" required><br><br>
+
+        <label for="Gender">Género (0:Masculino , 1: Femenino):</label>
+        <input type="number" id="Gender" name="Gender" required><br><br>
+
+        <label for="Sleep_duration">Duración del sueño (horas):</label>
+        <input type="number" step="0.1" id="Sleep_duration" name="Sleep_duration" required><br><br>
+
+        <label for="REM_sleep_percentage">% de sueño REM:</label>
+        <input type="number" step="0.1" id="REM_sleep_percentage" name="REM_sleep_percentage" required><br><br>
+
+        <label for="Deep_sleep_percentage">% de sueño profundo:</label>
+        <input type="number" step="0.1" id="Deep_sleep_percentage" name="Deep_sleep_percentage" required><br><br>
+
+        <label for="Light_sleep_percentage">% de sueño ligero:</label>
+        <input type="number" step="0.1" id="Light_sleep_percentage" name="Light_sleep_percentage" required><br><br>
+
+        <label for="Awakenings">Veces que se despierta:</label>
+        <input type="number" id="Awakenings" name="Awakenings" required><br><br>
+
+        <label for="Caffeine_consumption">Consumo de cafeína (mg):</label>
+        <input type="number" id="Caffeine_consumption" name="Caffeine_consumption" required><br><br>
+
+        <label for="Alcohol_consumption">Consumo de alcohol:</label>
+        <input type="number" id="Alcohol_consumption" name="Alcohol_consumption" required><br><br>
+
+        <label for="Smoking_status">Fuma (0: No, 1: Sí):</label>
+        <input type="number" id="Smoking_status" name="Smoking_status" required><br><br>
+
+        <label for="Exercise_frequency">Frecuencia de ejercicio (veces/semana):</label>
+        <input type="number" id="Exercise_frequency" name="Exercise_frequency" required><br><br>
+
+        <button type="submit">Predecir</button>
+    </form>
+
+    <h2>Resultado:</h2>
+    <p id="result"></p>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
