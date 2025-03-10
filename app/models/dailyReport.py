@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship,mapped_column,Mapped
 from datetime import date
 class DailyReport(Base):
   __tablename__ = 'daily_report'
-  id:Mapped[int] = mapped_column(primary_key=True,index=True)
+  id:Mapped[int] = mapped_column(primary_key=True,index=True,autoincrement='auto')
   id_user:Mapped[int]= mapped_column(ForeignKey('user.id'))
   id_data:Mapped[int]= mapped_column(ForeignKey('data_app.id'))
   id_smartwatch:Mapped[int] =  mapped_column(ForeignKey('smartwatch.id'))

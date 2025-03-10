@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship,mapped_column,Mapped
 from typing import List
 class User(Base):
   __tablename__ = 'user'
-  id:Mapped[int] = mapped_column(primary_key=True,index=True)
+  id:Mapped[int] = mapped_column(primary_key=True,index=True,autoincrement='auto')
   email:Mapped[str] = mapped_column(String(100),nullable=False)
   password:Mapped[str] = mapped_column(String(255),nullable=False)
   name:Mapped[str] = mapped_column(String(100),nullable=False)
