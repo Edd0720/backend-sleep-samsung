@@ -10,8 +10,7 @@ def create_user(db: Session, user: user.UserBase):
                    hashed_password=hashed_password, 
                    weight=user.weight,
                    gender=user.gender,
-                   age=user.age,
-                   id_user_type)
+                   age=user.age)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
