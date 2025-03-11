@@ -7,6 +7,12 @@ class UserBase(BaseModel):
   password:str
   age:str
   gender:bool
+  weight:float
   
 class User(UserBase):
   id:int
+  name:str
+  email:EmailStr
+
+  class Config:
+    orm_mode = True
