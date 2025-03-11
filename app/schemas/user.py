@@ -1,5 +1,6 @@
-
 from pydantic import BaseModel,EmailStr
+from typing import Optional
+
 
 class UserBase(BaseModel):
   email:EmailStr
@@ -8,6 +9,7 @@ class UserBase(BaseModel):
   age:str
   gender:bool
   weight:float
+  id_user_type: Optional[int] = None
   
 class User(UserBase):
   id:int
@@ -15,12 +17,7 @@ class User(UserBase):
   email:EmailStr
 
   class Config:
-    orm_mode = True
-    id: int
-    id_user_type: int
-
-    class Config:
-        orm_mode = True
+        from_attributes = True  
 
 class UserLogin(BaseModel):
     email: EmailStr

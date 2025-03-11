@@ -1,30 +1,17 @@
 from typing import Union
-from app.schemas.user import UserBase
+from app.schemas.user import UserBase, User
 from fastapi import FastAPI,Depends
 from app.services .auth import AuthService
-from app.db.database import session_local
+from app.db.database import get_db, engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import User
-<<<<<<< HEAD
+from app.routes.create_user import create_user
 from typing import Union, Annotated
-from data
 
 
-app = FastAPI()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-=======
-from app.routes import auth
-from app.db.database import get_db 
 
 app = FastAPI()
-app.include_router(auth.router)
->>>>>>> origin/rmSho
+
 
 @app.get("/")
 async def read_root():
@@ -37,11 +24,7 @@ async def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
 
-
-@app.post("/auth/register")
-async def create_user(user_data:UserBase,db:AsyncSession=Depends(get_db)):
-    userService = AuthService(db=db)
-    user = await userService.create_user(user=user_data,userModel=User)
-    return user
-    
+@app.post("/register",)
+async def register(user: UserBase, db: AsyncSession = Depends(get_db)):
+    return await create_user(db, user)
 

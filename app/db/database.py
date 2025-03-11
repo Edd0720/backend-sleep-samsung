@@ -5,13 +5,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 #cambiar usuario y nombre de la bd!!!
 DATABASE_URL = "mysql+asyncmy://root:@127.0.0.1:3306/db_sleep_quality"
-engine = create_async_engine(DATABASE_URL)
-session_local = sessionmaker(autoflush=False,bind=engine,class_=AsyncSession,expire_on_commit=False)
+engine = create_async_engine(DATABASE_URL, echo=True)
+
+
+AsyncSessionLocal = sessionmaker(
+    bind=engine, class_=AsyncSession, expire_on_commit=False
+)
 
 class Base(DeclarativeBase):
   pass
 
 # Función para obtener la sesión de la base de datos
-async def get_db() -> AsyncSession:
-    async with session_local() as session:
+async def get_db():
+    async with AsyncSessionLocal() as session:
         yield session
