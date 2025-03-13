@@ -6,6 +6,7 @@ from app.db.database import get_db, engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import User
 from app.routes import auth
+from app.routes.create_user import create_user
 from app.db.database import get_db 
 app = FastAPI()
 
