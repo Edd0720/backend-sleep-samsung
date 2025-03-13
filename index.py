@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import User
 from app.routes import auth
 from app.db.database import get_db 
-
 app = FastAPI()
 app.include_router(auth.router)
 

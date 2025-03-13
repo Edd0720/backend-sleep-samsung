@@ -1,4 +1,4 @@
-### 2. Iniciar sesión (obtener token JWT)
+### 1. Iniciar sesión (obtener token JWT)
 POST http://127.0.0.1:8000/login
 Content-Type: application/json
 
@@ -6,10 +6,17 @@ Content-Type: application/json
   "email": "admin@gmail.com",
   "password": "1234"
 }
-### Get current user (protected)
-GET http://localhost:8000/users/me
-Authorization: Bearer <token>
+### 2. Acceder a la Ruta Protegida de Admin (Usar Token)
+GET http://127.0.0.1:8000/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NDE2NjA5OTB9.nB8HxRhuLVHUWXBuGcE0tEn1n0rMgBUEDL2hkTJ3lIQ
 
+### 3. Logout (Invalidar Token)
+POST http://127.0.0.1:8000/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NDE2NjA5OTB9.nB8HxRhuLVHUWXBuGcE0tEn1n0rMgBUEDL2hkTJ3lIQ
+
+### 4. Intentar Acceder a la Ruta Protegida Después del Logout
+GET http://127.0.0.1:8000/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NDE2NjA5OTB9.nB8HxRhuLVHUWXBuGcE0tEn1n0rMgBUEDL2hkTJ3lIQ
 ### registrar usuario
 POST http://localhost:8000/auth/register
 Content-Type: application/json
