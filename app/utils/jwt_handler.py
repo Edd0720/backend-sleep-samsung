@@ -6,7 +6,8 @@ from fastapi import HTTPException, status
 SECRET_KEY = "clave_secreta"  # Cambiar despues por la que hayan usado
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
+# Lista negra de tokens invalidados
+blacklisted_tokens = set()
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -23,3 +24,6 @@ def decode_token(token: str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido o expirado",
         )
+
+def invalidate_token(token: str):
+    blacklisted_tokens.add(token)

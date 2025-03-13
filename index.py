@@ -5,11 +5,8 @@ from app.services .auth import AuthService
 from app.db.database import get_db, engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import User
-from app.routes.create_user import create_user
-from typing import Union, Annotated
-
-
-
+from app.routes import auth
+from app.db.database import get_db 
 app = FastAPI()
 
 
