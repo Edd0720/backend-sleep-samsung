@@ -11,29 +11,13 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from modelo import cargar_modelo, predecir
+from app.services.sleepService import SleepService
 import numpy as np
+from app.schemas.sleep import SleepData
 app = FastAPI()
 app.include_router(auth.router)
 import numpy
 print(numpy.__file__)
-
-
-# Cargar el modelo
-model = cargar_modelo()
-
-# Definir la estructura de los datos de entrada
-class InputData(BaseModel):
-    Age: int
-    Gender: int  # 0 para Femenino, 1 para Masculino
-    Sleep_duration: float
-    REM_sleep_percentage: float
-    Deep_sleep_percentage: float
-    Light_sleep_percentage: float
-    Awakenings: int
-    Caffeine_consumption: int
-    Alcohol_consumption: int
-    Smoking_status: int  # 0 para No, 1 para Sí
-    Exercise_frequency: int
 
 
 # Montar la carpeta static para servir archivos estáticos (CSS, JS, etc.)
@@ -47,35 +31,46 @@ def read_root():
 
 # Ruta para hacer predicciones
 @app.post("/predict/")
-def predict(data: InputData):
+async def predict(user_id:int,db:AsyncSession=Depends(get_db)):
     try:
+        # Cargar el modelo
+        model = cargar_modelo()
+        sleep_service= SleepService(db=db)
+        user_service = AuthService(db=db)
+        data_sleep = await sleep_service.get_sleep_data(user_id=user_id)
+        data_user = await user_service.get_data_user(user_id=user_id)
         # Convertir los datos de entrada a un array
         input_data = [
-            data.Age,
-            data.Gender,
-            data.Sleep_duration,
-            data.REM_sleep_percentage,
-            data.Deep_sleep_percentage,
-            data.Light_sleep_percentage,
-            data.Awakenings,
-            data.Caffeine_consumption,
-            data.Alcohol_consumption,
-            data.Smoking_status,
-            data.Exercise_frequency
+            data_user.age,
+            data_user.gender,
+            data_sleep.smart_watch.rem_sleep_cycle,
+            data_sleep.smart_watch.deep_sleep_cycle,
+            data_sleep.smart_watch.light_sleep_cycle,
+            data_sleep.smart_watch.awakenings,
+            data_sleep.data_app.caffeine_consumption,
+            data_sleep.data_app.alcohol_consumption,
+            data_sleep.data_app.smoking_status,
+            data_sleep.data_app.excercise_frecuency,
+            
         ]
-
         # Hacer la predicción
         prediction = predecir(model, input_data)
         return {"prediction": prediction}
     except Exception as e:
         return {"error": str(e)}
-@app.get("/ping")
-async def ping():
-   return {"message": "pong!"}
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+    
 
+#ruta para registrar los datos del sueño
+@app.post("/sleep/register")
+async def register_sleep(sleep_data:SleepData,db:AsyncSession=Depends(get_db)):
+    sleep_service = SleepService(db=db)
+    sleep = await sleep_service.create_sleep_data(sleep_data=sleep_data)
+    return sleep
+    
+   
+
+
+#ruta para crear un usuario
 @app.post("/auth/register")
 async def create_user(user_data:UserBase,db:AsyncSession=Depends(get_db)):
     userService = AuthService(db=db)
