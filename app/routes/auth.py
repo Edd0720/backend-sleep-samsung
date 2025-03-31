@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.user import UserLogin
+from app.schemas.user import UserLogin, User
 from app.services.auth_service import authenticate_user
-from app.utils.jwt_handler import create_access_token,invalidate_token, decode_token
+from app.utils.jwt_handler import create_access_token, invalidate_token
 from app.db.database import get_db
-from app.middleware.auth_middleware import admin_only 
+from app.middleware.auth_middleware import admin_only
 from fastapi.security import OAuth2PasswordBearer
+
 router = APIRouter()
 
 @router.post("/login")
@@ -24,8 +25,25 @@ async def login(user_data: UserLogin, db: AsyncSession = Depends(get_db)):
     token_data = {"sub": user.email, "role": role}
     access_token = create_access_token(token_data)
     
-    return {"access_token": access_token, "token_type": "bearer"}
-#para permitir el acceso solo si el usuario es admin
+    # Convertir el usuario a un esquema Pydantic para retornarlo
+    user_dict = {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "age": user.age,
+        "gender": user.gender,
+        "weight": user.weight,
+        "id_user_type": user.id_user_type,
+        "role": role
+    }
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user_dict
+    }
+
+# Para permitir el acceso solo si el usuario es admin
 @router.get("/admin")
 async def admin_route(user_data: dict = Depends(admin_only)):
     return {"message": "Bienvenido, admin"}
