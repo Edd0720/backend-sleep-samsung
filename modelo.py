@@ -18,7 +18,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 """# Carga de CSV y categorizacion de datos"""
 
-datset = pd.read_csv('SSD_V10.csv')
+datset = pd.read_csv('SSD_V10 (10).csv')
 
 datset.rename(columns = {'Wakeup time':'Wakeup_time', 'Sleep duration':'Sleep_duration',"Sleep efficiency":"Sleep_efficiency",
                      "REM sleep percentage":"REM_sleep_percentage","Deep sleep percentage":"Deep_sleep_percentage",
