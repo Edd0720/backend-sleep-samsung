@@ -9,7 +9,6 @@ from app.routes import auth
 from app.db.database import get_db 
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
 from modelo import cargar_modelo, predecir
 from app.services.sleepService import SleepService
 import numpy as np
@@ -31,26 +30,26 @@ def read_root():
 
 # Ruta para hacer predicciones
 @app.post("/predict/")
-async def predict(user_id:int,db:AsyncSession=Depends(get_db)):
+async def predict(sleep_data:SleepData,db:AsyncSession=Depends(get_db)):
     try:
+        sleep_service = SleepService(db=db)
+        user_service = AuthService(db=db)
+        sleep = await sleep_service.create_sleep_data(sleep_data=sleep_data)
+        data_user = await user_service.get_data_user(user_id=sleep.id_user)
         # Cargar el modelo
         model = cargar_modelo()
-        sleep_service= SleepService(db=db)
-        user_service = AuthService(db=db)
-        data_sleep = await sleep_service.get_sleep_data(user_id=user_id)
-        data_user = await user_service.get_data_user(user_id=user_id)
         # Convertir los datos de entrada a un array
         input_data = [
             data_user.age,
             data_user.gender,
-            data_sleep.smart_watch.rem_sleep_cycle,
-            data_sleep.smart_watch.deep_sleep_cycle,
-            data_sleep.smart_watch.light_sleep_cycle,
-            data_sleep.smart_watch.awakenings,
-            data_sleep.data_app.caffeine_consumption,
-            data_sleep.data_app.alcohol_consumption,
-            data_sleep.data_app.smoking_status,
-            data_sleep.data_app.excercise_frecuency,
+            sleep.smart_watch.rem_sleep_cycle,
+            sleep.smart_watch.deep_sleep_cycle,
+            sleep.smart_watch.light_sleep_cycle,
+            sleep.smart_watch.awakenings,
+            sleep.data_app.caffeine_consumption,
+            sleep.data_app.alcohol_consumption,
+            sleep.data_app.smoking_status,
+            sleep.data_app.excercise_frecuency,
             
         ]
         # Hacer la predicción
@@ -59,15 +58,6 @@ async def predict(user_id:int,db:AsyncSession=Depends(get_db)):
     except Exception as e:
         return {"error": str(e)}
     
-
-#ruta para registrar los datos del sueño
-@app.post("/sleep/register")
-async def register_sleep(sleep_data:SleepData,db:AsyncSession=Depends(get_db)):
-    sleep_service = SleepService(db=db)
-    sleep = await sleep_service.create_sleep_data(sleep_data=sleep_data)
-    return sleep
-    
-   
 
 
 #ruta para crear un usuario
